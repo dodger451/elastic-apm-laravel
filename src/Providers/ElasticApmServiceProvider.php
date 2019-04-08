@@ -6,6 +6,8 @@ use Illuminate\Database\Events\QueryExecuted;
 use Illuminate\Support\Collection;
 use Illuminate\Support\ServiceProvider;
 use PhilKra\Agent;
+use PhilKra\AgentInterface;
+use PhilKra\AgentV2;
 use PhilKra\ElasticApmLaravel\Contracts\VersionResolver;
 use PhilKra\Helper\Timer;
 
@@ -66,13 +68,35 @@ class ElasticApmServiceProvider extends ServiceProvider
                 )
             );
         });
+        $this->app->singleton(AgentV2::class, function ($app) {
+            return new AgentV2(
+                array_merge(
+                    [
+                        'framework' => 'Laravel',
+                        'frameworkVersion' => app()->version(),
+                    ],
+                    [
+                        'active' => config('elastic-apm.active'),
+                        'httpClient' => config('elastic-apm.httpClient'),
+                    ],
+                    $this->getAppConfig(),
+                    config('elastic-apm.env'),
+                    config('elastic-apm.server')
+                )
+            );
+        });
 
         $this->startTime = $this->app['request']->server('REQUEST_TIME_FLOAT') ?? microtime(true);
         $this->timer = new Timer($this->startTime);
 
         $this->app->instance(Timer::class, $this->timer);
 
-        $this->app->alias(Agent::class, 'elastic-apm');
+        if (config('elastic-apm.server.apmVersion') == 'v2') {
+            $this->app->alias(AgentV2::class, AgentInterface::class);//TODO check this
+        } else {
+            $this->app->alias(Agent::class, AgentInterface::class);//TODO check this
+        }
+
         $this->app->instance('query-log', collect([]));
     }
 

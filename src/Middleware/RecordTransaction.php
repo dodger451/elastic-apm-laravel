@@ -4,13 +4,13 @@ namespace PhilKra\ElasticApmLaravel\Middleware;
 
 use Closure;
 use Illuminate\Support\Facades\Log;
-use PhilKra\Agent;
+use PhilKra\AgentInterface;
 use PhilKra\Helper\Timer;
 
 class RecordTransaction
 {
     /**
-     * @var \PhilKra\Agent
+     * @var \PhilKra\AgentInterface
      */
     protected $agent;
     /**
@@ -20,9 +20,9 @@ class RecordTransaction
 
     /**
      * RecordTransaction constructor.
-     * @param Agent $agent
+     * @param AgentInterface $agent
      */
-    public function __construct(Agent $agent, Timer $timer)
+    public function __construct(AgentInterface $agent, Timer $timer)
     {
         $this->agent = $agent;
         $this->timer = $timer;

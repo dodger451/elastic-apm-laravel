@@ -13,18 +13,18 @@ namespace PhilKra\ElasticApmLaravel\Exceptions;
 
 use Exception;
 use App\Exceptions\Handler;
-use \PhilKra\Agent;
+use \PhilKra\AgentInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class ApmAgent extends Handler
 {
     /**
-     * @var \PhilKra\Agent
+     * @var \PhilKra\AgentInterface
      */
     protected $agent;
 
-    public function __construct(Agent $agent)
+    public function __construct(AgentInterface $agent)
     {
         $this->agent = $agent;
     }
