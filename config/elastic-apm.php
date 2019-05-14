@@ -10,6 +10,11 @@ return [
 
         // The version of your app
         'appVersion'    => env('APM_APPVERSION', ''),
+
+        'connector'    =>   env('APM_CONNECTOR', 'PhilKra\Middleware\SocketConnector'),
+        'v1_trans_sock'  => env('APM_TRANSACTION_SOCKET', 'unix:///tmp/.apm.sock'),
+        'v1_err_sock'    => env('APM_ERROR_SOCKET','unix:///tmp/.apm.errors.sock'),
+        'socket_timeout' => env('APM_SOCKET_TIMEOUT',1),
     ],
 
     'env' => [
